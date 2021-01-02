@@ -1,0 +1,1 @@
+setuptools~=python3 -m pip install --user --upgrade setuptools wheel51.1.1
