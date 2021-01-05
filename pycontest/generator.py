@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import random
 import string
-from typing import Union, Generator, Callable
+from typing import Union, Generator, Callable, SupportsRound
+
 
 
 class UndefinedVariable(Exception):
@@ -36,17 +39,6 @@ class Variables:
         self.generator = kwargs.get('generator')
         self.decimal_places = kwargs.get('decimal_places')
 
-        # set d_placer a function that rounds variables to
-        # *decimal_places* places if
-        #
-        if self.decimal_places:
-            def d_placer(x):
-                return (x * (10 ** self.decimal_places)) // 1 / (10 ** self.decimal_places)
-        else:
-            def d_placer(x):
-                return x
-        self.d_placer = d_placer
-
         # last will used to access last generated variable
         # in case of use Variable in other generators as parameters
         self.last = None
@@ -54,11 +46,16 @@ class Variables:
         # Initialize
         self.next()
 
-    def __get__(self, instance, owner):
-        return self.next()
+    def rounder(self, val):
+        if self.decimal_places and isinstance(val, SupportsRound):
+            self.last = round(val, self.decimal_places)
+        else:
+            self.last = val
+        return self.last
 
     def next(self):
-        self.last = self.d_placer(self.generator(*self.args))
+        tmp_args = [x if not isinstance(x, (IntVar, FloatVar)) else x.last for x in self.args]
+        self.last = self.rounder(self.generator(*tmp_args))
         return self.last
 
 
@@ -69,7 +66,9 @@ class BoundedVar(Variables):
     """
 
     def __init__(self, lower_bound, upper_bound, *args, **kwargs):
-        if upper_bound < lower_bound:
+        tmp_upper = upper_bound if not isinstance(upper_bound, Variables) else upper_bound.last
+        tmp_lower = lower_bound if not isinstance(lower_bound, Variables) else lower_bound.last
+        if tmp_upper < tmp_lower:
             raise BoundingError(lower_bound, upper_bound)
         super().__init__(lower_bound, upper_bound, *args, **kwargs)
 
@@ -79,7 +78,7 @@ class IntVar(BoundedVar):
     using random.randint callable.
     """
 
-    def __init__(self, lower_bound: int, upper_bound: int, **kwargs):
+    def __init__(self, lower_bound: Union[IntVar, int], upper_bound: Union[IntVar, int], **kwargs):
         super().__init__(lower_bound, upper_bound, generator=random.randint, **kwargs)
 
 
@@ -88,7 +87,7 @@ class FloatVar(BoundedVar):
     using random.uniform callable.
     """
 
-    def __init__(self, lower_bound: Union[float, int], upper_bound: Union[float, int], **kwargs):
+    def __init__(self, lower_bound: Union[float, int, IntVar, FloatVar], upper_bound: Union[float, int, IntVar, FloatVar], **kwargs):
         super().__init__(lower_bound, upper_bound, generator=random.uniform, **kwargs)
 
 
@@ -111,7 +110,7 @@ class Collections(Variables):
         # not using temp args/length will cause to set arguments as a not
         # changeable integer for next generations.
 
-        return [self.d_placer(self.generator(*tmp_args)) for _ in range(tmp_length)]
+        return [self.rounder(self.generator(*tmp_args)) for _ in range(tmp_length)]
 
 
 class CustomArray(Collections):
@@ -121,7 +120,7 @@ class CustomArray(Collections):
     # that yields each member for a generation, But Collection uses a generator
     # that returns each member of array(e.g random.randint).
     def __init__(self, length: Union[int, IntVar], generator: Callable[..., Generator], *args, **kwargs):
-        super().__init__(*args, generator=generator, decimal_places=0, length=length, **kwargs)
+        super().__init__(*args, generator=generator, length=length, **kwargs)
 
     def next(self):
         tmp_args = [x if not isinstance(x, (IntVar, FloatVar)) else x.last for x in self.args]
@@ -130,7 +129,7 @@ class CustomArray(Collections):
         # Making a generator from Callable[..., Generator] function for each generation
         gen = self.generator(*tmp_args)
 
-        return [self.d_placer(next(gen)) for _ in range(self.length)]
+        return [self.rounder(next(gen)) for _ in range(self.length)]
 
 
 class IntArray(Collections):

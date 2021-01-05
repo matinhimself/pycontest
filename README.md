@@ -1,6 +1,6 @@
 # pycontest
 
-A simple testcase generator for generating testcases for online judges.
+An easy to use testcase generator for generating testcases for online judges.
 
 ## Installation
 `$ pip install git+https://github.com/matinhimself/pycontest`
@@ -89,7 +89,6 @@ class TestCase(Case):
     arr = CustomArray(100, q, m)
 
     def __str__(self):
-        nl = "\n"
         return f"input:\n{self.m}\n" + \
                f"\n{self.arr}\n"
 
