@@ -1,13 +1,8 @@
-import pytest
-import pycontest
-from pycontest import IntVar, FloatVar
+from pycontest import IntVar, FloatVar, Case
+import logging
 
 
-class WrongBoundingError(Exception):
-    pass
-
-
-class VariableBoundingTest(pycontest.Case):
+class VariableBoundingTest(Case):
     batch_size = 10000
     a = IntVar(0, 500)
     b = IntVar(a, 1000)
@@ -15,7 +10,8 @@ class VariableBoundingTest(pycontest.Case):
 
     @staticmethod
     def test_bounding(a, b, c):
-        assert a <= c <= b
+        if not a <= c <= b:
+            logging.error(f"Bounding Test failed.{a} {b} {c} ")
 
     def config(self):
         self.separator = ""
@@ -24,7 +20,4 @@ class VariableBoundingTest(pycontest.Case):
 
     def __str__(self):
         return ""
-
-pycontest.Case.main()
-
 
