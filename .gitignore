@@ -1,5 +1,6 @@
 main.py
 tests.txt
+examples/tests.txt
 .idea
 # Byte-compiled / optimized / DLL files
 __pycache__/
