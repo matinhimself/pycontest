@@ -7,50 +7,75 @@ An easy to use testcase generator for generating testcases for online judges.
 
 ## Basic Usage
 ```python
-from pycontest import Case, IntArray, IntVar, FloatVar
+from pycontest import Case, IntArray, \
+    IntVar, FloatVar
 
-# Every test case will be a subclass of Case class
+from pycontest import printHelper
+
+# A test case
 class TestCase(Case):
-    # batch_size is how many times testCase will be generated 
     batch_size = 10
-    
-    # You can define every variable simply
+    # Times a testcase will be generated
+
+    # Simply define variables
     m = FloatVar(0.5, 1.2, decimal_places=2)
-    n = IntVar(0, 5)
+    n = IntVar(1, 5)
     arr = IntArray(0, 100, n)
 
+    # Override __str__ to customize
+    # to customize output style.
     def __str__(self):
-        # The __str__ method is required.
-        # It will specify the style of generated test case
+        # We can not use \n in fstrings
+        # you can use `endl` const from printHelper
         return f"input:\n{self.m} {self.n}\n" + \
-               f"{self.arr}\n"
+         f"{printHelper.list_printer(self.arr)}\n" + \
+         f"output:\n{self.output}\n"
 
+    # Config method is required if you
+    # want to specify the output writer
+    # or define output method
     def config(self):
-        # Config method is required if you want to specify the output writer
-        # Default writer is sys.stdout so it will output to terminal by default
-        self.writer = open("tests.txt", "w")
-        # sys.redirect_stdout will close io automatically after printing
+        # Function that generates output
+        self.function = sum
+        # A list of variables that will
+        # passed to the `function`
+        self.input_sequence = [self.arr]
 
+        # Default `writer` is sys.stdout
+        self.writer = open("tests.txt", "a")
+        # sys.redirect_stdout will close
+        # io automatically after printing
+
+
+# Case.main() will start generating
+# for all Case's subclasses,
+# just like unittest package.
 Case.main()
-# Case.main() will start generating for all Case's subclasses, just like unittest package.
 ```
-the code above will generate
+
+the code above will generate something like this:
 ```
 ./tests.txt
+input:
+0.92 2
+64
+41
+output:
+105
+
+.
+.
+.
 
 input:
-0.94 1
-[93]
-
-input:
-0.76 0
-[]
-
-...
-
-input:
-0.62 3
-[62, 40, 89]
+1.1 5
+8
+47
+33
+69
+6
+output:
+163
 ```
 
 ### Using more than one TestCase

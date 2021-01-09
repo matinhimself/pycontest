@@ -1,6 +1,15 @@
+import logging
 import sys
 from contextlib import redirect_stdout
 from typing import Callable, Any
+
+
+class NoToStringError(Exception):
+    """Exception raised for NoToStringError"""
+
+    def __init__(self):
+        self.message = "Override __str__ method to customize output style."
+        super(NoToStringError, self).__init__(self.message)
 
 
 class Case:
@@ -10,7 +19,7 @@ class Case:
     batch_size = 1
     input_sequence = None
     function: Callable[..., Any] = None
-    _output = None
+    output = None
     writer = sys.stdout
     separator: str = "\n"
 
@@ -25,9 +34,16 @@ class Case:
                         setattr(tmp, k, v.next())
                 tm = tmp()
                 tm.config()
-                if tm.function is not None and tm.input_sequence is not None:
-                    tm._output = tm.function(*tm.input_sequence)
+                if tm.function and tm.input_sequence:
+                    tm.output = tm.function(*tm.input_sequence)
                 tm.printer()
+
+    def __str__(self):
+        if self.output:
+            return f"{' '.join([str(x) for x in self.input_sequence])}\n" + \
+                   f"{self.output}" + self.separator
+        else:
+            raise NoToStringError()
 
     def printer(self):
         with redirect_stdout(self.writer):
