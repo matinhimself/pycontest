@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pycontest',
-    version='0.1.0',
+    version='0.1.1',
     packages=['pycontest'],
     url='',
     license='MIT',
