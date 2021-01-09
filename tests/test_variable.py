@@ -20,4 +20,3 @@ class VariableBoundingTest(Case):
 
     def __str__(self):
         return ""
-

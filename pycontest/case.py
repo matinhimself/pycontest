@@ -1,26 +1,29 @@
 import logging
 import sys
 from contextlib import redirect_stdout
-from typing import Callable, Any
+from typing import Callable, Any, Optional
+
+from pycontest.helper import OutputHelper
 
 
-class NoToStringError(Exception):
+class NoOtpStrMethod(Exception):
     """Exception raised for NoToStringError"""
 
     def __init__(self):
         self.message = "Override __str__ method to customize output style."
-        super(NoToStringError, self).__init__(self.message)
+        super(NoOtpStrMethod, self).__init__(self.message)
 
 
 class Case:
     """A base class that TestCases will inherit that, by default it will generate a testCase only once
     you can change that by changing the batch_size.
     """
+    __case_count = 0
     batch_size = 1
     input_sequence = None
     function: Callable[..., Any] = None
     output = None
-    writer = sys.stdout
+    writer = OutputHelper()
     separator: str = "\n"
 
     @staticmethod
@@ -38,19 +41,26 @@ class Case:
                     tm.output = tm.function(*tm.input_sequence)
                 tm.printer()
 
-    def __str__(self):
-        if self.output:
-            return f"{' '.join([str(x) for x in self.input_sequence])}\n" + \
-                   f"{self.output}" + self.separator
-        else:
-            raise NoToStringError()
-
     def printer(self):
+        if isinstance(self.writer, OutputHelper):
+            self.writer.printer(self.__inp_str__(), self.__otp_str__(), Case.__case_count)
+            Case.__case_count += 1
+            return
         with redirect_stdout(self.writer):
-            print(self.__str__(), end=self.separator)
+            print(self.__inp_str__() + "\n" + self.__otp_str__() + "\n", end=self.separator)
 
     def initialize(self, batch_size):
         self.batch_size = batch_size
 
     def config(self):
         pass
+
+    def __inp_str__(self) -> str:
+        return f"{' '.join([str(x) for x in self.input_sequence])}\n" + \
+               self.separator
+
+    def __otp_str__(self) -> str:
+        if self.output:
+            return f"{self.output}"
+        else:
+            raise NoOtpStrMethod

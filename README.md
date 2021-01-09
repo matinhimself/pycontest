@@ -8,75 +8,47 @@ An easy to use testcase generator for generating testcases for online judges.
 ## Basic Usage
 ```python
 from pycontest import Case, IntArray, \
-    IntVar, FloatVar
+    IntVar
 
-from pycontest import printHelper
+from pycontest import PrintHelper
 
-# A test case
+
 class TestCase(Case):
     batch_size = 10
-    # Times a testcase will be generated
 
-    # Simply define variables
-    m = FloatVar(0.5, 1.2, decimal_places=2)
-    n = IntVar(1, 5)
-    arr = IntArray(0, 100, n)
+    n = IntVar(1, 10**2)
+    arr = IntArray(-1000, 1000, n)
 
-    # Override __str__ to customize
-    # to customize output style.
-    def __str__(self):
-        # We can not use \n in fstrings
-        # you can use `endl` const from printHelper
-        return f"input:\n{self.m} {self.n}\n" + \
-         f"{printHelper.list_printer(self.arr)}\n" + \
-         f"output:\n{self.output}\n"
+    def __inp_str__(self):
+        return f"{self.n}\n" +\
+                f"{PrintHelper.list_printer(self.arr)}"
 
-    # Config method is required if you
-    # want to specify the output writer
-    # or define output method
     def config(self):
-        # Function that generates output
-        self.function = sum
-        # A list of variables that will
-        # passed to the `function`
+        self.function = min
         self.input_sequence = [self.arr]
 
-        # Default `writer` is sys.stdout
-        self.writer = open("tests.txt", "a")
-        # sys.redirect_stdout will close
-        # io automatically after printing
 
-
-# Case.main() will start generating
-# for all Case's subclasses,
-# just like unittest package.
 Case.main()
 ```
-
 the code above will generate something like this:
+```txt
+        # └───tests
+        #     ├────in
+        #     │     ├───test0.txt
+        #     │     ├───test1.txt
+        #     │     │  . . .
+        #     │     └───test10.txt
+        #     └────out
+        #           ├───test0.txt
+        #           ├───test1.txt
+        #           │  . . .
+        #           └───test10.txt
 ```
-./tests.txt
-input:
-0.92 2
-64
-41
-output:
-105
+each `tests/in/test<n>.txt` file contains the output of `__inp_str__`function.
 
-.
-.
-.
+each `tests/out/test<n>.txt` file contains the the output of `function` with `*input_sequence` as parameters.
 
-input:
-1.1 5
-8
-47
-33
-69
-6
-output:
-163
-```
+For more examples see [examples](https://github.com/matinhimself/pycontest/tree/main/examples).
 
 ### Using more than one TestCase
 you can simply generate different test cases with making more classes inheriting from Case class.
