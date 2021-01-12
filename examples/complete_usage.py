@@ -21,20 +21,22 @@ class TestCase(Case):
         return f"input:\n{self.m} {self.n}\n" + \
                f"{PrintHelper.list_printer(self.arr)}"
 
+    def __otp_str__(self):
+        return f"output:\n{self.output}"
+
     # Config method is required if you
     # want to specify the output writer
     # or define output method
     def config(self):
         # Function that generates output
         self.function = sum
+
         # A list of variables that will
         # passed to the `function`
         self.input_sequence = [self.arr]
 
-        # Default writer, writes in terminal.
-        # If you want all test cases in a file:
-        # self.writer = open("file.txt","a")
-        # or use `OutputHelper` style:
+        # Default writer, writes testcases
+        # in this style:
         # └───tests
         #     ├────in
         #     │     ├───test0.txt
@@ -46,7 +48,17 @@ class TestCase(Case):
         #           ├───test1.txt
         #           │  . . .
         #           └───test<n>.txt
-        self.writer = OutputHelper()
+        # You can customize directory names
+        # and input/output prefix using
+        # self.writer = OutputHelper(kwargs)
+
+        # If you want to print all testCases
+        # in terminal:
+        # self.writer = sys.stdout
+
+        # If you want all test cases in a file:
+        # self.writer = open("file.txt","a")
+
         # sys.redirect_stdout will close
         # io automatically after printing
 
