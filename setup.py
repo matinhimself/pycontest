@@ -2,11 +2,11 @@ from setuptools import setup
 
 setup(
     name='pycontest',
-    version='0.1.2',
+    version='0.1.3',
     packages=['pycontest'],
     url='',
     license='MIT',
-    author='psyg1k',
-    author_email='forgodsakematin@gmail.com',
-    description='A simple tool to generate random test cases.'
+    author='matinhimself',
+    author_email='itsmatinhimself@gmail.com',
+    description='An easy to use test case generator.'
 )

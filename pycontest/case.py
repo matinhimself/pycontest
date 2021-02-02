@@ -10,7 +10,7 @@ class NoOtpStrMethod(Exception):
     """Exception raised for NoToStringError"""
 
     def __init__(self):
-        self.message = "Override __str__ method to customize output style."
+        self.message = "Override __otp_str__ method to customize output style."
         super(NoOtpStrMethod, self).__init__(self.message)
 
 
@@ -60,7 +60,7 @@ class Case:
                self.separator
 
     def __otp_str__(self) -> str:
-        if self.output:
+        if self.output is not None:
             return f"{self.output}"
         else:
             raise NoOtpStrMethod

@@ -1,7 +1,8 @@
 from pycontest import Case, IntArray, \
     IntVar, FloatVar
 
-from pycontest import PrintHelper, OutputHelper
+from pycontest import OutputHelper
+from pycontest.helper import list_printer
 
 
 class TestCase(Case):
@@ -19,7 +20,7 @@ class TestCase(Case):
         # We can not use \n in fstrings
         # you can use `endl` const from printHelper
         return f"input:\n{self.m} {self.n}\n" + \
-               f"{PrintHelper.list_printer(self.arr)}"
+               f"{list_printer(self.arr)}"
 
     def __otp_str__(self):
         return f"output:\n{self.output}"

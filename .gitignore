@@ -1,5 +1,7 @@
 main.py
 ./tsts
+./tests/in
+./tests/out
 tests.txt
 examples/tests.txt
 .idea

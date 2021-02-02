@@ -1,13 +1,12 @@
-from typing import Union
-from os import path, makedirs, listdir
+from os import path, makedirs
 
 
-class PrintHelper:
-    endl = "\n"
+def list_printer(lst, sep="\n", end=""):
+    return sep.join([str(x) for x in lst]) + end
 
-    @staticmethod
-    def list_printer(lst, sep="\n", end=""):
-        return sep.join([str(x) for x in lst]) + end
+
+def string_printer(lst, end=""):
+    return list_printer(lst, "", end)
 
 
 class OutputHelper:
@@ -38,4 +37,3 @@ class OutputHelper:
         self.create_directories()
         self.write(inp, self.input_path, f"{self.in_prefix}{str(_counter)}.txt")
         self.write(outp, self.output_path, f"{self.out_prefix}{str(_counter)}.txt")
-
