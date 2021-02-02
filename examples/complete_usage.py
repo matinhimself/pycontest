@@ -36,29 +36,30 @@ class TestCase(Case):
         # passed to the `function`
         self.input_sequence = [self.arr]
 
-        # Default writer, writes testcases
-        # in this style:
+        # Default writer, writes each testcase
+        # into separate files like below:
         # └───tests
         #     ├────in
-        #     │     ├───test0.txt
-        #     │     ├───test1.txt
+        #     │     ├───input0.txt
+        #     │     ├───input1.txt
         #     │     │  . . .
-        #     │     └───test<n>.txt
+        #     │     └───input10.txt
         #     └────out
-        #           ├───test0.txt
-        #           ├───test1.txt
+        #           ├───output0.txt
+        #           ├───output1.txt
         #           │  . . .
-        #           └───test<n>.txt
-        # You can customize directory names
-        # and input/output prefix using
-        # self.writer = OutputHelper(kwargs)
-
-        # If you want to print all testCases
-        # in terminal:
-        # self.writer = sys.stdout
-
-        # If you want all test cases in a file:
-        # self.writer = open("file.txt","a")
+        #           └───output10.txt
+        #
+        # + You can customize directory names
+        #   and input/output prefix using
+        #       self.writer = OutputHelper(kwargs)
+        #
+        # - If you want to print all testCases
+        #   in terminal:
+        #       self.writer = sys.stdout
+        #
+        # - If you want all test cases in a file:
+        #       self.writer = open("file.txt","a")
 
         # sys.redirect_stdout will close
         # io automatically after printing

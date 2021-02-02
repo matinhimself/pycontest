@@ -10,7 +10,7 @@ An easy to use testcase generator for generating testcases for online judges.
 from pycontest import Case, IntArray, \
     IntVar
 
-from pycontest import PrintHelper
+from pycontest.helper import list_printer
 
 
 class TestCase(Case):
@@ -21,7 +21,7 @@ class TestCase(Case):
 
     def __inp_str__(self):
         return f"{self.n}\n" +\
-                f"{PrintHelper.list_printer(self.arr)}"
+                f"{list_printer(self.arr)}"
 
     def config(self):
         self.function = min
@@ -30,37 +30,37 @@ class TestCase(Case):
 
 Case.main()
 ```
-the code above will generate something like this:
+Default writer, writes each testcase into separate files:
 ```txt
         # └───tests
         #     ├────in
-        #     │     ├───test0.txt
-        #     │     ├───test1.txt
+        #     │     ├───input0.txt
+        #     │     ├───input1.txt
         #     │     │  . . .
-        #     │     └───test10.txt
+        #     │     └───input10.txt
         #     └────out
-        #           ├───test0.txt
-        #           ├───test1.txt
+        #           ├───output0.txt
+        #           ├───output1.txt
         #           │  . . .
-        #           └───test10.txt
+        #           └───output10.txt
 ```
-each `tests/in/test<n>.txt` file contains the output of `__inp_str__`function.
+each `tests/in/input<n>.txt` file contains the output of `__inp_str__`function.
 
-each `tests/out/test<n>.txt` file contains the the output of `function` with `*input_sequence` as parameters.
+each `tests/out/output<n>.txt` file contains the the output of `function` with `*input_sequence` as parameters.
 
-For more examples see [examples](https://github.com/matinhimself/pycontest/tree/main/examples).
+For more examples and explanation see [examples](https://github.com/matinhimself/pycontest/tree/main/examples).
 
 ### Using more than one TestCase
 you can simply generate different test cases with making more classes inheriting from Case class.
 ```python
 ...
-    class TestCase1(Case):
-        # ...
-        pass
+class TestCase1(Case):
+    # ...
+    pass
 
-    class TestCase2(Case):
-        # ...
-        pass
+class TestCase2(Case):
+    # ...
+    pass
 Case.main()
 ```
 
