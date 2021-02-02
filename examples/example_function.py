@@ -3,6 +3,8 @@ from pycontest import Case, IntVar, CharArray
 from pycontest.helper import string_printer
 
 
+# lcs returns length of longest common substring
+# source: https://www.geeksforgeeks.org/longest-common-substring-dp-29/
 def lcs(str1, str2, m, n):
     matrix = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
 
