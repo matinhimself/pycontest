@@ -30,6 +30,14 @@ class TestCase(Case):
 
 Case.main()
 ```
+Instead of function you can use a python file, set `self.app` to the python file path.
+```python
+    def config(self):
+        self.path = 'my_app.py'
+``` 
+in this method your app will run with `__inp_str__` function as input, and all the stdout prints will captured as output. 
+see [example_app](https://github.com/matinhimself/pycontest/blob/main/examples/example_app.py).
+### writer
 Default writer, writes each testcase into separate files:
 ```txt
         # └───tests
