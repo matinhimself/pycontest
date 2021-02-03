@@ -1,7 +1,11 @@
 import logging
 import sys
+from unittest import mock
+from io import StringIO
 from contextlib import redirect_stdout
 from typing import Callable, Any, Optional
+
+from py._builtin import execfile
 
 from pycontest.helper import OutputHelper
 
@@ -17,13 +21,19 @@ class NoOtpStrMethod(Exception):
 class Case:
     """A base class that TestCases will inherit that, by default it will generate a testCase only once
     you can change that by changing the batch_size.
+    @param 
     """
     __case_count = 0
     batch_size = 1
-    input_sequence = None
+
     function: Callable[..., Any] = None
+    app = None
+
+    input_sequence = None
     output = None
+
     writer = OutputHelper()
+
     separator: str = "\n"
 
     @staticmethod
@@ -37,8 +47,15 @@ class Case:
                         setattr(tmp, k, v.next())
                 tm = tmp()
                 tm.config()
-                if tm.function and tm.input_sequence:
+                if tm.function and tm.input_sequence is not None:
                     tm.output = tm.function(*tm.input_sequence)
+                if tm.app is not None:
+                    print(tm.__inp_str__().split('\n'))
+                    with mock.patch('builtins.input', side_effect=tm.__inp_str__().split('\n')):
+                        with mock.patch('sys.stdout', new=StringIO()) as capturedOutput:
+                            execfile(tm.app)
+                    tm.output = capturedOutput.getvalue()
+
                 tm.printer()
 
     def printer(self):

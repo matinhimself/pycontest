@@ -5,7 +5,6 @@ import string
 from typing import Union, Generator, Callable, SupportsRound
 
 
-
 class UndefinedVariable(Exception):
     """Exception raised for UndefinedVariable"""
 
@@ -87,7 +86,8 @@ class FloatVar(BoundedVar):
     using random.uniform callable.
     """
 
-    def __init__(self, lower_bound: Union[float, int, IntVar, FloatVar], upper_bound: Union[float, int, IntVar, FloatVar], **kwargs):
+    def __init__(self, lower_bound: Union[float, int, IntVar, FloatVar],
+                 upper_bound: Union[float, int, IntVar, FloatVar], **kwargs):
         super().__init__(lower_bound, upper_bound, generator=random.uniform, **kwargs)
 
 
@@ -134,12 +134,15 @@ class CustomArray(Collections):
 
 class IntArray(Collections):
     """"Generates random integer for each member of array using random.randint generator"""
-    def __init__(self, lower_bound: Union[IntVar, int], upper_bound: Union[IntVar, int], length: Union[IntVar, int]):
+
+    def __init__(self, lower_bound: Union[IntVar, int], upper_bound: Union[IntVar, int],
+                 length: Union[IntVar, int]):
         super().__init__(lower_bound, upper_bound, length=length, generator=random.randint, decimal_places=0)
 
 
 class FloatArray(Collections):
     """"Generates random float for each member of array using random.uniform generator"""
+
     def __init__(self, lower_bound: Union[int, float, IntVar, FloatVar],
                  upper_bound: Union[int, float, IntVar, FloatVar],
                  length: Union[int, IntVar], decimal_places: int = 1):
@@ -149,11 +152,13 @@ class FloatArray(Collections):
 
 class ChoiceList(Collections):
     """Generates random choice from given list with random.choice generator"""
+
     def __init__(self, length: Union[int, IntVar], choice_list: list, *args, **kwargs):
         super().__init__(choice_list, *args, generator=random.choice, length=length, **kwargs)
 
 
 class CharArray(ChoiceList):
     """"Generates random choice from all available english characters"""
+
     def __init__(self, length: Union[int, IntVar]):
         super().__init__(length, string.ascii_letters)
