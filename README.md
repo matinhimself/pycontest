@@ -12,12 +12,12 @@ An easy to use testcase generator for generating testcases for online judges.
 
 | Type |  Description | Example |
 | - | - | - |
-| `IntVar(a, b)`| Generates a random integer N such that `a` <= N <= `b`.| `IntVar(1, IntVar(10, 20))` |
-| `FloatVar(a, b)` |  Generates a random float N such that `a` <= N <= `b`.| `FloatVar(1.5, FloatVar(1.6, 20))`  | 
-| `CustomArray(l, g, *args)` | Generates an array with length `l` and `g` as generator of each element | [Here]( #using-custom-generator) |
-|`IntArray(a, b, l)`|Generates a random integer array with length `l` and `IntVar(a, b)` as generator.|`IntArray(0, 100, IntVar(0, 10**9))`|
-|`FloatArray(a, b, l)`|Generates a random float array with length `l` and `FloatVar(a, b)` as generator.|`FloatArray(2.2, 80.3, IntVar(0, 10**9))`|
-|`ChoiceList(l, c_l: list or string)`|Generates a random array with length `l` and a random choice of c_l |`ChoiceList(100, string.hexdigits)`|
+| IntVar(a, b)| Generates a random integer N such that `a` <= N <= `b`.| `IntVar(1, IntVar(10, 20))` |
+| FloatVar(a, b) |  Generates a random float N such that `a` <= N <= `b`.| `FloatVar(1.5, FloatVar(1.6, 20))`  | 
+| CustomArray(l, g, *args) | Generates an array with length `l` and `g` as generator of each element | [Here]( #using-custom-generator) |
+|IntArray(a, b, l)|Generates a random integer array with length `l` and `IntVar(a, b)` as generator.|`IntArray(0, 100, IntVar(0, 10**9))`|
+|FloatArray(a, b, l)|Generates a random float array with length `l` and `FloatVar(a, b)` as generator.|`FloatArray(2.2, 80.3, IntVar(0, 10**9))`|
+|ChoiceList(l, c_l: list or string)|Generates a random array with length `l` and a random choice of c_l |`ChoiceList(100, string.hexdigits)`|
 
 ### Usage
 ```python
