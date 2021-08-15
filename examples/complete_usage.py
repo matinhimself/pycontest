@@ -1,40 +1,83 @@
+import string
+import random
+from typing import Generator
+
 from pycontest import Case, IntArray, \
-    IntVar, FloatVar
+    IntVar, FloatVar, FloatArray, ChoiceList, CustomArray
 
-from pycontest import OutputHelper
-from pycontest.helper import list_printer
+from pycontest.helper import list_printer, string_printer
 
 
+# skip this for now.
+# Gamma distribution random generator as a custom generator.
+def custom_generator(f1: float, f2: float, n: int) -> Generator[float, float, None]:
+    for i in range(n):
+        yield random.gammavariate(f1, f2) * 100 // 1 / 100
+
+
+# just like pythons unittest module,
+# define your testcase classes inheriting `pycontest.Case`
+# and call Case.main() to start generating testcases.
 class TestCase(Case):
-    batch_size = 100
-    # Times a testcase will be generated
+    # defines how many test cases will be generated
+    batch_size = 11
 
-    # Simply define variables
-    m = FloatVar(0.5, 1.2, decimal_places=2)
-    n = IntVar(1, 5)
-    arr = IntArray(0, 100, n)
+    # variables:
 
-    # Override __str__ to customize
-    # to customize output style.
+    # single Integer Variable
+    n = IntVar(1, 10)
+
+    # Array of Integer with given size and bounds
+    # you can use Variables in arguments of variables constructors too!
+    arr = IntArray(lower_bound=0, upper_bound=100, length=n)
+
+    # single float Variable
+    f1 = FloatVar(1, 10, decimal_places=2)
+    f2 = FloatVar(f1, 10, decimal_places=2)
+
+    # Array of Integer with given size and bounds
+    float_arr = FloatArray(f1, f2, n, decimal_places=3)
+
+    # An array from Choice List with given size
+    letters = ChoiceList(n, string.ascii_uppercase)
+
+    # An array from your custom generator function.
+    gamma_gen = CustomArray(n, custom_generator, f1, f2, n)
+
+    # defines how inputs will be printed to the writer
     def __inp_str__(self):
-        # We can not use \n in fstrings
-        # you can use `endl` const from printHelper
-        return f"input:\n{self.m} {self.n}\n" + \
-               f"{list_printer(self.arr)}"
+        return f"input: \n{self.n}\n" + \
+               f"{list_printer(self.arr, sep=', ')}\n" + \
+               f"{self.f1}\n" + \
+               f"{self.f2}\n" + \
+               f"{list_printer(self.float_arr, sep=', ')}\n" + \
+               f"{string_printer(self.letters)}\n" + \
+               f"{self.gamma_gen}\n"
 
-    def __otp_str__(self):
-        return f"output:\n{self.output}"
+    # defines how outputs will be printed to the writer
+    def __otp_str__(self) -> str:
+        return f"output: \n{self.output}"
 
-    # Config method is required if you
-    # want to specify the output writer
-    # or define output method
     def config(self):
-        # Function that generates output
-        self.function = sum
+        # if u want generate output, you have 2 options
+        #
+        # 1: using a function; just set self.function
+        # here we will use builtin min function
+        # that return minimum value of a list
+        self.function = min
+        # then set your functions input arguments
+        # here we will pass both arr and float_arr to the min function
+        self.input_sequence = [[*self.arr, *self.float_arr]]
 
-        # A list of variables that will
-        # passed to the `function`
-        self.input_sequence = [self.arr]
+        # or
+        # 2: using a python application.
+        # you can generate output with your python program.
+        # just set your application path like
+        # self.app = r'my_min.py'
+        # and pycontest will use __inp_str__
+        # to generate the input for your program
+        # and mock it as std.in to your program.
+        # see https://github.com/matinhimself/pycontest/blob/main/examples/example_app.py
 
         # Default writer, writes each testcase
         # into separate files like below:
@@ -51,8 +94,11 @@ class TestCase(Case):
         #           └───output10.txt
         #
         # + You can customize directory names
-        #   and input/output prefix using
+        #   , input/output and ... of default writer helper.OutputHelper.
         #       self.writer = OutputHelper(kwargs)
+        #
+        # - Make your own writer class implementing
+        #     writer.OutputWriter Protocol
         #
         # - If you want to print all testCases
         #   in terminal:
@@ -63,9 +109,8 @@ class TestCase(Case):
 
         # sys.redirect_stdout will close
         # io automatically after printing
+        self.writer = open("./tests.txt", "a")
 
 
-# Case.main() will start generating
-# for all Case's subclasses,
-# just like unittest package.
-Case.main()
+if __name__ == '__main__':
+    Case.main()

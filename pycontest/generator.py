@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import random
 import string
-from typing import Union, Generator, Callable, SupportsRound
+from typing import Union, Generator, Callable, SupportsRound, Any
+
+
+class IterationNotCompleted(BaseException):
+    """Generator stopped iteration. Make sure it iterates over all arrays length"""
+    pass
 
 
 class UndefinedVariable(Exception):
@@ -119,17 +124,20 @@ class CustomArray(Collections):
     # The difference with :Collections: class is :CustomArray: gets a Callable[..., Generator]
     # that yields each member for a generation, But Collection uses a generator
     # that returns each member of array(e.g random.randint).
-    def __init__(self, length: Union[int, IntVar], generator: Callable[..., Generator], *args, **kwargs):
+    def __init__(self, length: Union[int, IntVar], generator: Callable[..., Generator[Any, Any, Any]], *args, **kwargs):
         super().__init__(*args, generator=generator, length=length, **kwargs)
 
     def next(self):
         tmp_args = [x if not isinstance(x, (IntVar, FloatVar)) else x.last for x in self.args]
-        self.length = self.length if not isinstance(self.length, IntVar) else self.length.last
+        tmp_length = self.length if not isinstance(self.length, IntVar) else self.length.last
 
         # Making a generator from Callable[..., Generator] function for each generation
         gen = self.generator(*tmp_args)
-
-        return [self.rounder(next(gen)) for _ in range(self.length)]
+        try:
+            self.last = [self.rounder(next(gen)) for _ in range(tmp_length)]
+        except StopIteration:
+            raise IterationNotCompleted("\nGenerator stopped iteration. Make sure it iterates over all arrays length.")
+        return self.last
 
 
 class IntArray(Collections):
