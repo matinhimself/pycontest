@@ -1,10 +1,7 @@
-import logging
-import sys
 from unittest import mock
 from io import StringIO
 from contextlib import redirect_stdout
-from typing import Callable, Any, Optional, TextIO, Text, Union
-from pathlib import Path
+from typing import Callable, Any,  TextIO, Union
 
 from pycontest.helper import OutputHelper
 from pycontest.writer import OutputWriter
@@ -37,7 +34,8 @@ class Case:
     separator: str = "\n"
 
     @staticmethod
-    def main():
+    def main(dev_mode=False):
+
         for sc in Case.__subclasses__():
             tmp = type('tmp', sc.__bases__, dict(sc.__dict__))
             for num in range(sc.batch_size):
@@ -57,6 +55,10 @@ class Case:
                     tm.output = capturedOutput.getvalue()
 
                 tm.printer()
+            if dev_mode:
+                print(f"{sc.batch_size} tests passed.")
+            else:
+                print(f"{sc.batch_size} testcase generated.")
 
     def printer(self):
         if isinstance(self.writer, OutputWriter):
