@@ -5,7 +5,7 @@ def list_printer(lst, sep="\n", end=""):
     return sep.join([str(x) for x in lst]) + end
 
 
-def string_printer(lst, end=""):
+def string_printer(lst, end=''):
     return list_printer(lst, "", end)
 
 
@@ -28,12 +28,12 @@ class OutputHelper:
             makedirs(self.output_path)
 
     @staticmethod
-    def write(printable: str, dir_path, file_name):
+    def write_to_file(printable: str, dir_path, file_name):
         relative_path = path.join(dir_path, file_name)
         with open(relative_path, "w") as f:
             f.write(printable)
 
     def printer(self, inp: str, outp: str, _counter: int):
         self.create_directories()
-        self.write(inp, self.input_path, f"{self.in_prefix}{str(_counter)}.txt")
-        self.write(outp, self.output_path, f"{self.out_prefix}{str(_counter)}.txt")
+        OutputHelper.write_to_file(inp, self.input_path, f"{self.in_prefix}{str(_counter)}.txt")
+        OutputHelper.write_to_file(outp, self.output_path, f"{self.out_prefix}{str(_counter)}.txt")

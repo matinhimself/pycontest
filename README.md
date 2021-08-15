@@ -6,7 +6,9 @@ An easy to use testcase generator for generating testcases for online judges.
 
 `$ pip install git+https://github.com/matinhimself/pycontest`
 
+
 ## Basic Usage
+I highly recommend you to read [this example](https://github.com/matinhimself/pycontest/blob/main/examples/complete_usage.py). 
 
 ### Types
 

@@ -3,11 +3,11 @@ import sys
 from unittest import mock
 from io import StringIO
 from contextlib import redirect_stdout
-from typing import Callable, Any, Optional
-
-from py._builtin import execfile
+from typing import Callable, Any, Optional, TextIO, Text, Union
+from pathlib import Path
 
 from pycontest.helper import OutputHelper
+from pycontest.writer import OutputWriter
 
 
 class NoOtpStrMethod(Exception):
@@ -32,7 +32,7 @@ class Case:
     input_sequence = None
     output = None
 
-    writer = OutputHelper()
+    writer: Union[TextIO, OutputWriter] = OutputHelper()
 
     separator: str = "\n"
 
@@ -53,13 +53,13 @@ class Case:
                     print(tm.__inp_str__().split('\n'))
                     with mock.patch('builtins.input', side_effect=tm.__inp_str__().split('\n')):
                         with mock.patch('sys.stdout', new=StringIO()) as capturedOutput:
-                            execfile(tm.app)
+                            exec(tm.app)
                     tm.output = capturedOutput.getvalue()
 
                 tm.printer()
 
     def printer(self):
-        if isinstance(self.writer, OutputHelper):
+        if isinstance(self.writer, OutputWriter):
             self.writer.printer(self.__inp_str__(), self.__otp_str__(), Case.__case_count)
             Case.__case_count += 1
             return
