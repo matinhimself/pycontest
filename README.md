@@ -1,4 +1,4 @@
-# pycontest(0.1.4)
+# pycontest(v1.0)
 
 An easy to use testcase generator for generating testcases for online judges.
 
