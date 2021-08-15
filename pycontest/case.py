@@ -1,7 +1,7 @@
 from unittest import mock
 from io import StringIO
 from contextlib import redirect_stdout
-from typing import Callable, Any,  TextIO, Union
+from typing import Callable, Any, TextIO, Union
 
 from pycontest.helper import OutputHelper
 from pycontest.writer import OutputWriter
