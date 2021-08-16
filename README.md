@@ -1,10 +1,10 @@
-# pycontest(v1.0)
+# pycontest(v1.2)
 
 An easy to use testcase generator for generating testcases for online judges.
 
 ## Installation
 
-`$ pip install git+https://github.com/matinhimself/pycontest`
+`$ pip install pycontest`
 
 
 ## Basic Usage
