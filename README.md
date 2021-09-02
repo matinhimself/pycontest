@@ -99,7 +99,7 @@ Case.main()
 
 ### Using custom generator
 
-To using your own generator for generating variables you can use `CustomArray`.
+To use your own generator for generating variables you can use `CustomArray`.
 
 ```python
 from pycontest import Case, IntVar, CustomArray
