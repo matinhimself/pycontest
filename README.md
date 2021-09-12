@@ -8,7 +8,7 @@ An easy to use testcase generator for generating testcases for online judges.
 
 
 ## Basic Usage
-I highly recommend you to read [this example](https://github.com/matinhimself/pycontest/blob/main/examples/complete_usage.py). 
+I highly recommend you reading [this example](https://github.com/matinhimself/pycontest/blob/main/examples/complete_usage.py). 
 
 ### Types
 
