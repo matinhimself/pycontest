@@ -62,7 +62,7 @@ class Case:
 
     def printer(self):
         if isinstance(self.writer, OutputWriter):
-            self.writer.printer(self.__inp_str__(), self.__otp_str__(), Case.__case_count)
+            self.writer.printer(self.__inp_str__(), self.__otp_str__(), Case.__case_count + 1)
             Case.__case_count += 1
             return
         with redirect_stdout(self.writer):
