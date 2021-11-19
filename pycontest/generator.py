@@ -148,6 +148,21 @@ class IntArray(Collections):
         super().__init__(lower_bound, upper_bound, length=length, generator=random.randint, decimal_places=0)
 
 
+class Array2d(Collections):
+    """"Generates random integer for each member of array using random.randint generator"""
+
+    def __init__(self, array: Union[IntArray, FloatArray], length: Union[IntVar, int]):
+        self.array = array
+        super().__init__(length=length)
+
+    def next(self):
+        tmp_args = [x if not isinstance(x, (IntVar, FloatVar)) else x.last for x in self.args]
+        tmp_length = self.length if not isinstance(self.length, IntVar) else self.length.last
+
+        self.last = [self.array.next() for _ in range(tmp_length)]
+        return self.last
+
+
 class FloatArray(Collections):
     """"Generates random float for each member of array using random.uniform generator"""
 

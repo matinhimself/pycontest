@@ -5,6 +5,10 @@ def list_printer(lst, sep="\n", end=""):
     return sep.join([str(x) for x in lst]) + end
 
 
+def list2d_printer(lst, sep="\n", inner_sep=" ", end=""):
+    return sep.join(list_printer(i, sep=inner_sep) for i in lst) + end
+
+
 def string_printer(lst, end=''):
     return list_printer(lst, "", end)
 
