@@ -48,10 +48,9 @@ class Case:
                 if tm.function and tm.input_sequence is not None:
                     tm.output = tm.function(*tm.input_sequence)
                 if tm.app is not None:
-                    print(tm.__inp_str__().split('\n'))
                     with mock.patch('builtins.input', side_effect=tm.__inp_str__().split('\n')):
                         with mock.patch('sys.stdout', new=StringIO()) as capturedOutput:
-                            exec(tm.app)
+                            exec(open(tm.app).read())
                     tm.output = capturedOutput.getvalue()
 
                 tm.printer()

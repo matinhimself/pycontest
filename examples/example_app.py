@@ -11,7 +11,7 @@ class TestCase(Case):
         return f"{list_printer(self.list1, sep=' ')}\n{list_printer(self.list2, sep=' ')}"
 
     def config(self):
-        self.app = r'my_min.py'
+        self.app = r'./my_min.py'
 
 
 Case.main()
