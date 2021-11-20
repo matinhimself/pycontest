@@ -20,7 +20,7 @@ I highly recommend you reading [this example](https://github.com/matinhimself/py
 |IntArray(a, b, l)|Generates a random integer array with length `l` and `IntVar(a, b)` as generator.|`IntArray(0, 100, IntVar(0, 10**9))`|
 |FloatArray(a, b, l)|Generates a random float array with length `l` and `FloatVar(a, b)` as generator.|`FloatArray(2.2, 80.3, IntVar(0, 10**9))`|
 |ChoiceList(l, c_l: list or string)|Generates a random array with length `l` and a random choice of c_l |`ChoiceList(100, string.hexdigits)`|
-
+|Array2d(l, array:[IntArray, FloatArray, ChoiceList])| Populates a 2d array with given array| [Here]( #using-2d-array) |
 ### Usage
 ```python
 from pycontest import Case, IntArray, \
@@ -128,5 +128,15 @@ class TestCase(Case):
 Case.main()
 
 ```
-
+from pycontest import Case, IntVar, IntArray
 Here with `CustomArray` via our `q` generator we were able to generate an array that has maximum `m` 0s in and chance of a member being 0 is 1/3.
+
+
+###using-2d-array
+```python
+
+class TestCase(Case):
+    m = IntVar(0, 5)
+    arr = IntArray(100, q, m)
+    arr2d = Array2d(m, arr)
+```

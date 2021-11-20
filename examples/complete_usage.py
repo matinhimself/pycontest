@@ -1,11 +1,12 @@
 import string
 import random
+import sys
 from typing import Generator
 
 from pycontest import Case, IntArray, \
-    IntVar, FloatVar, FloatArray, ChoiceList, CustomArray
+    IntVar, FloatVar, FloatArray, ChoiceList, CustomArray, Array2d
 
-from pycontest.helper import list_printer, string_printer
+from pycontest.helper import list_printer, string_printer, list2d_printer, endl
 
 
 # skip this for now.
@@ -20,39 +21,58 @@ def custom_generator(f1: float, f2: float, n: int) -> Generator[float, float, No
 # and call Case.main() to start generating testcases.
 class TestCase(Case):
     # defines how many test cases will be generated
-    batch_size = 11
+    batch_size = 1
 
     # variables:
 
     # single Integer Variable
     n = IntVar(1, 10)
+    m = IntVar(1, 10)
 
     # Array of Integer with given size and bounds
     # you can use Variables in arguments of variables constructors too!
     arr = IntArray(lower_bound=0, upper_bound=100, length=n)
-
     # single float Variable
     f1 = FloatVar(1, 10, decimal_places=2)
     f2 = FloatVar(f1, 10, decimal_places=2)
 
     # Array of Integer with given size and bounds
-    float_arr = FloatArray(f1, f2, n, decimal_places=3)
+    float_arr = FloatArray(lower_bound=f1, upper_bound=f2, length=n, decimal_places=3)
 
     # An array from Choice List with given size
-    letters = ChoiceList(n, string.ascii_uppercase)
+    letters = ChoiceList(length=n, choice_list=string.ascii_uppercase)
 
     # An array from your custom generator function.
+    # args after generator will be passed to generator.
     gamma_gen = CustomArray(n, custom_generator, f1, f2, n)
+
+    # 2d Array from any type of array.
+    # making 2d array from a 2d array will produce a 3d array
+    # and so on.
+    arr2d = Array2d(array=gamma_gen, length=m)
+
+    arr3d = Array2d(array=arr2d, length=m)
 
     # defines how inputs will be printed to the writer
     def __inp_str__(self):
-        return f"input: \n{self.n}\n" + \
-               f"{list_printer(self.arr, sep=', ')}\n" + \
-               f"{self.f1}\n" + \
-               f"{self.f2}\n" + \
-               f"{list_printer(self.float_arr, sep=', ')}\n" + \
-               f"{string_printer(self.letters)}\n" + \
-               f"{self.gamma_gen}\n"
+        return f"""
+n           : {self.n}
+m           : {self.m}
+
+arr[{self.n}]      : {self.arr}
+arr[{self.n}]      : {list_printer(self.arr, sep=" ")}
+
+f1, f2      : {self.f1}, {self.f2}
+
+float_arr[{self.n}]: {self.float_arr}
+
+letters[{self.n}]  : {list_printer(self.letters, sep="")}
+gamma_gen[{self.n}]: {self.gamma_gen}
+
+arr2d[{self.n}][{self.m}] :
+{list2d_printer(self.arr2d)}
+
+        """
 
     # defines how outputs will be printed to the writer
     def __otp_str__(self) -> str:
@@ -83,13 +103,13 @@ class TestCase(Case):
         # into separate files like below:
         # └───tests
         #     ├────in
-        #     │     ├───input0.txt
         #     │     ├───input1.txt
+        #     │     ├───input2.txt
         #     │     │  . . .
         #     │     └───input10.txt
         #     └────out
-        #           ├───output0.txt
         #           ├───output1.txt
+        #           ├───output2.txt
         #           │  . . .
         #           └───output10.txt
         #
@@ -109,7 +129,10 @@ class TestCase(Case):
 
         # sys.redirect_stdout will close
         # io automatically after printing
-        self.writer = open("./tests.txt", "a")
+        #
+        # self.writer = open("tests/test.txt", "a")
+
+        self.writer = sys.stdout
 
 
 if __name__ == '__main__':

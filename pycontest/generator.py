@@ -151,7 +151,7 @@ class IntArray(Collections):
 class Array2d(Collections):
     """"Generates random integer for each member of array using random.randint generator"""
 
-    def __init__(self, array: Union[IntArray, FloatArray], length: Union[IntVar, int]):
+    def __init__(self, array: Union[IntArray, FloatArray, CustomArray, Array2d], length: Union[IntVar, int]):
         self.array = array
         super().__init__(length=length)
 
