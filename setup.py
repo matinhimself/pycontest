@@ -7,13 +7,13 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pycontest',
-    version='1.2',
+    version='1.3',
     packages=['pycontest'],
     url='https://github.com/matinhimself/pycontest',
     license='MIT',
     author='Matin Habibi',
     author_email='aktualled@gmail.com',
-    description='An easy to use test case generator.',
+    description='A complete test case generator.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     python_requires=">=3.8",
