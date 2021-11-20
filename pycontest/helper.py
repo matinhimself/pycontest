@@ -1,5 +1,7 @@
 from os import path, makedirs
 
+endl = '\n'
+
 
 def list_printer(lst, sep="\n", end=""):
     return sep.join([str(x) for x in lst]) + end

@@ -9,5 +9,6 @@ from .generator import CharArray
 from .generator import ChoiceList
 from .generator import Variables
 from .generator import CustomArray
+from .generator import Array2d
 
 from .helper import OutputHelper
