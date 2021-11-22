@@ -21,6 +21,8 @@ I highly recommend you reading [this example](https://github.com/matinhimself/py
 |FloatArray(a, b, l)|Generates a random float array with length `l` and `FloatVar(a, b)` as generator.|`FloatArray(2.2, 80.3, IntVar(0, 10**9))`|
 |ChoiceList(l, c_l: list or string)|Generates a random array with length `l` and a random choice of c_l |`ChoiceList(100, string.hexdigits)`|
 |Array2d(l, array:[IntArray, FloatArray, ChoiceList])| Populates a 2d array with given array| [Here]( #using-2d-array) |
+
+
 ## Usage
 ```python
 from pycontest import Case, IntArray, \
@@ -61,9 +63,12 @@ Instead of function you can use a python file, set `self.app` to the python file
 in this method your app will run with `__inp_str__` function as input, and all the stdout prints will captured as output.
 see [example_app](https://github.com/matinhimself/pycontest/blob/main/examples/example_app.py).
 
+
 ## input and output testcases style
 You can customize style of input and output with overriding `__inp_str__` and `__out_str__`.
 The function and app result will be available as `self.output` in `__out_str__`
+
+
 ## writer
 
 Default writer, writes each testcase into separate files:
