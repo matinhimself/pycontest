@@ -132,7 +132,7 @@ from pycontest import Case, IntVar, IntArray
 Here with `CustomArray` via our `q` generator we were able to generate an array that has maximum `m` 0s in and chance of a member being 0 is 1/3.
 
 
-###using-2d-array
+### Using 2d array
 ```python
 
 class TestCase(Case):
