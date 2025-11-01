@@ -1,13 +1,20 @@
+"""
+Variable and array generators for test case generation.
+
+This module provides classes for generating random variables and arrays
+with various constraints and distributions.
+"""
+
 from __future__ import annotations
 
 import random
 import string
-from typing import Union, Generator, Callable, SupportsRound, Any
+from collections.abc import Callable, Generator
+from typing import Any, SupportsRound
 
 
 class IterationNotCompleted(BaseException):
-    """Generator stopped iteration. Make sure it iterates over all arrays length"""
-    pass
+    """Generator stopped iteration. Make sure it iterates over all arrays length."""
 
 
 class UndefinedVariable(Exception):
@@ -82,7 +89,7 @@ class IntVar(BoundedVar):
     using random.randint callable.
     """
 
-    def __init__(self, lower_bound: Union[IntVar, int], upper_bound: Union[IntVar, int], **kwargs):
+    def __init__(self, lower_bound: IntVar | int, upper_bound: IntVar | int, **kwargs):
         super().__init__(lower_bound, upper_bound, generator=random.randint, **kwargs)
 
 
@@ -91,8 +98,12 @@ class FloatVar(BoundedVar):
     using random.uniform callable.
     """
 
-    def __init__(self, lower_bound: Union[float, int, IntVar, FloatVar],
-                 upper_bound: Union[float, int, IntVar, FloatVar], **kwargs):
+    def __init__(
+        self,
+        lower_bound: float | int | IntVar | FloatVar,
+        upper_bound: float | int | IntVar | FloatVar,
+        **kwargs,
+    ):
         super().__init__(lower_bound, upper_bound, generator=random.uniform, **kwargs)
 
 
@@ -124,7 +135,13 @@ class CustomArray(Collections):
     # The difference with :Collections: class is :CustomArray: gets a Callable[..., Generator]
     # that yields each member for a generation, But Collection uses a generator
     # that returns each member of array(e.g random.randint).
-    def __init__(self, length: Union[int, IntVar], generator: Callable[..., Generator[Any, Any, Any]], *args, **kwargs):
+    def __init__(
+        self,
+        length: int | IntVar,
+        generator: Callable[..., Generator[Any, Any, Any]],
+        *args,
+        **kwargs,
+    ):
         super().__init__(*args, generator=generator, length=length, **kwargs)
 
     def next(self):
@@ -143,15 +160,18 @@ class CustomArray(Collections):
 class IntArray(Collections):
     """"Generates random integer for each member of array using random.randint generator"""
 
-    def __init__(self, lower_bound: Union[IntVar, int], upper_bound: Union[IntVar, int],
-                 length: Union[IntVar, int]):
-        super().__init__(lower_bound, upper_bound, length=length, generator=random.randint, decimal_places=0)
+    def __init__(
+        self, lower_bound: IntVar | int, upper_bound: IntVar | int, length: IntVar | int
+    ):
+        super().__init__(
+            lower_bound, upper_bound, length=length, generator=random.randint, decimal_places=0
+        )
 
 
 class Array2d(Collections):
     """"Generates random integer for each member of array using random.randint generator"""
 
-    def __init__(self, array: Union[IntArray, FloatArray, CustomArray, Array2d], length: Union[IntVar, int]):
+    def __init__(self, array: IntArray | FloatArray | CustomArray | Array2d, length: IntVar | int):
         self.array = array
         super().__init__(length=length)
 
@@ -166,22 +186,31 @@ class Array2d(Collections):
 class FloatArray(Collections):
     """"Generates random float for each member of array using random.uniform generator"""
 
-    def __init__(self, lower_bound: Union[int, float, IntVar, FloatVar],
-                 upper_bound: Union[int, float, IntVar, FloatVar],
-                 length: Union[int, IntVar], decimal_places: int = 1):
-        super().__init__(lower_bound, upper_bound, length=length, generator=random.uniform,
-                         decimal_places=decimal_places)
+    def __init__(
+        self,
+        lower_bound: int | float | IntVar | FloatVar,
+        upper_bound: int | float | IntVar | FloatVar,
+        length: int | IntVar,
+        decimal_places: int = 1,
+    ):
+        super().__init__(
+            lower_bound,
+            upper_bound,
+            length=length,
+            generator=random.uniform,
+            decimal_places=decimal_places,
+        )
 
 
 class ChoiceList(Collections):
     """Generates random choice from given list with random.choice generator"""
 
-    def __init__(self, length: Union[int, IntVar], choice_list: list, *args, **kwargs):
+    def __init__(self, length: int | IntVar, choice_list: list, *args, **kwargs):
         super().__init__(choice_list, *args, generator=random.choice, length=length, **kwargs)
 
 
 class CharArray(ChoiceList):
     """"Generates random choice from all available english characters"""
 
-    def __init__(self, length: Union[int, IntVar]):
+    def __init__(self, length: int | IntVar):
         super().__init__(length, string.ascii_letters)
