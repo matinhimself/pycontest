@@ -1,11 +1,12 @@
-from pycontest import Case, IntVar, CharArray
-
+from pycontest import Case, CharArray, IntVar
 from pycontest.helper import string_printer
 
 
-# lcs returns length of longest common substring
-# source: https://www.geeksforgeeks.org/longest-common-substring-dp-29/
-def lcs(str1, str2, m, n):
+def lcs(str1: list[str], str2: list[str], m: int, n: int) -> int:
+    """Return length of longest common substring.
+
+    Source: https://www.geeksforgeeks.org/longest-common-substring-dp-29/
+    """
     matrix = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
 
     result = 0
@@ -28,12 +29,13 @@ class TestCase(Case):
     str_1 = CharArray(len_str_1)
     str_2 = CharArray(len_str_2)
 
-    def __inp_str__(self):
+    def __inp_str__(self) -> str:
         return f"{string_printer(self.str_1)}\n{string_printer(self.str_2)}"
 
-    def config(self):
+    def config(self) -> None:
         self.function = lcs
         self.input_sequence = [self.str_1, self.str_2, self.len_str_1, self.len_str_2]
 
 
-Case.main()
+if __name__ == "__main__":
+    Case.main()

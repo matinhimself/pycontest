@@ -1,18 +1,24 @@
-import string
 import random
+import string
 import sys
-from typing import Generator
+from collections.abc import Generator
 
-from pycontest import Case, IntArray, \
-    IntVar, FloatVar, FloatArray, ChoiceList, CustomArray, Array2d
+from pycontest import (
+    Array2d,
+    Case,
+    ChoiceList,
+    CustomArray,
+    FloatArray,
+    FloatVar,
+    IntArray,
+    IntVar,
+)
+from pycontest.helper import endl, list2d_printer, list_printer
 
-from pycontest.helper import list_printer, string_printer, list2d_printer, endl
 
-
-# skip this for now.
 # Gamma distribution random generator as a custom generator.
-def custom_generator(f1: float, f2: float, n: int) -> Generator[float, float, None]:
-    for i in range(n):
+def custom_generator(f1: float, f2: float, n: int) -> Generator[float]:
+    for _ in range(n):
         yield random.gammavariate(f1, f2) * 100 // 1 / 100
 
 
@@ -53,8 +59,8 @@ class TestCase(Case):
 
     arr3d = Array2d(array=arr2d, length=m)
 
-    # defines how inputs will be printed to the writer
-    def __inp_str__(self):
+    def __inp_str__(self) -> str:
+        """Define how inputs will be printed to the writer."""
         return f"""
 n           : {self.n}
 m           : {self.m}
@@ -74,11 +80,11 @@ arr2d[{self.n}][{self.m}] :
 
         """
 
-    # defines how outputs will be printed to the writer
     def __otp_str__(self) -> str:
+        """Define how outputs will be printed to the writer."""
         return f"output: \n{self.output}"
 
-    def config(self):
+    def config(self) -> None:
         # if u want generate output, you have 2 options
         #
         # 1: using a function; just set self.function
@@ -135,5 +141,5 @@ arr2d[{self.n}][{self.m}] :
         self.writer = sys.stdout
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Case.main()
